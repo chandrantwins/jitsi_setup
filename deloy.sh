@@ -227,6 +227,9 @@ cd ~/
 unzip jitsi_setup/jicofo-linux-x64-1.1-SNAPSHOT.zip
 
 cd jicofo-linux-x64-1.1-SNAPSHOT
-./jicofo.sh --host=localhost --domain="$server_name" --secret="$jcofo_secret" --user_domain="auth.$server_name" --user_name=focus --user_password="$auth_secret"
+cat > "/etc/rc.local" <<END
+/bin/bash /root/jicofo-linux-x64-1.1-SNAPSHOT/jicofo.sh --host=localhost --domain=$server_name --secret=$jcofo_secret --user_domain=auth.$server_name --user_name=focus --user_password=$auth_secret </dev/null >> /var/log/jicofo.log 2>&1
+END
+
 
 
