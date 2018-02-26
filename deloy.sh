@@ -208,8 +208,7 @@ printf "Cai dat JVB... \n"
 printf "=========================================================================\n"
 
 cd ~/
-wget https://download.jitsi.org/jitsi-videobridge/linux/jitsi-videobridge-linux-x64-1031.zip
-unzip jitsi-videobridge-linux-x64-1031.zip
+unzip jitsi_setup/jitsi-videobridge-linux-x64-1031.zip
 
 mkdir "$home_dir/.sip-communicator"
 
@@ -220,5 +219,15 @@ END
 cat > "/etc/rc.local" <<END
 /bin/bash /root/jitsi-videobridge-linux-x64-1031/jvb.sh --host=localhost --domain=$server_name --port=5347 --secret=$jvb_secret </dev/null >> /var/log/jvb.log 2>&1
 END
+
+printf "=========================================================================\n"
+printf "Cai dat JICOFO... \n"
+printf "=========================================================================\n"
+
+cd ~/
+unzip jitsi_setup/jicofo-ubuntu-1.0-SNAPSHOT.zip
+
+cd jicofo-ubuntu-1.0-SNAPSHOT
+./jicofo.sh --host=localhost --domain="$server_name" --secret="$jcofo_secret" --user_domain="auth.$server_name" --user_name=focus --user_password="$auth_secret"
 
 
