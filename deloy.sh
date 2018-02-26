@@ -215,10 +215,6 @@ cat > "$home_dir/.sip-communicator/sip-communicator.properties" <<END
 org.jitsi.impl.neomedia.transform.srtp.SRTPCryptoContext.checkReplay=false
 END
 
-cat > "/etc/rc.local" <<END
-/bin/bash /root/jitsi-videobridge-linux-x64-1031/jvb.sh --host=localhost --domain=$server_name --port=5347 --secret=$jvb_secret </dev/null >> /var/log/jvb.log 2>&1
-END
-
 printf "=========================================================================\n"
 printf "Cai dat JICOFO... \n"
 printf "=========================================================================\n"
@@ -228,6 +224,7 @@ unzip jitsi_setup/jicofo-linux-x64-1.1-SNAPSHOT.zip
 
 cd jicofo-linux-x64-1.1-SNAPSHOT
 cat > "/etc/rc.local" <<END
+/bin/bash /root/jitsi-videobridge-linux-x64-1031/jvb.sh --host=localhost --domain=$server_name --port=5347 --secret=$jvb_secret </dev/null >> /var/log/jvb.log 2>&1
 /bin/bash /root/jicofo-linux-x64-1.1-SNAPSHOT/jicofo.sh --host=localhost --domain=$server_name --secret=$jcofo_secret --user_domain=auth.$server_name --user_name=focus --user_password=$auth_secret </dev/null >> /var/log/jicofo.log 2>&1
 END
 
