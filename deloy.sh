@@ -10,6 +10,8 @@ if [ $(id -u) != "0" ]; then
     exit
 fi
 cd ~/
+apt-get update
+apt-get install bc
 
 printf "=========================================================================\n"
 printf "Check cai cau hinh phat da \n"
@@ -41,9 +43,6 @@ printf "========================================================================
 printf "Chuan bi qua trinh cai dat... \n"
 printf "=========================================================================\n"
 
-sleep 3
-#update server
-apt-get update
 home_dir=$( getent passwd "$USER" | cut -d: -f6 )
 apt-get install -y default-jre
 apt-get install -y default-jdk maven
@@ -149,6 +148,7 @@ printf "Cai dat NGINX... \n"
 printf "=========================================================================\n"
 
 apt-get install -y nginx 
+service nginx stop
 
 mkdir /etc/nginx/ssl/
 openssl dhparam 2048 -out /etc/nginx/ssl/dhparam.pem
@@ -192,13 +192,12 @@ server {
 }
 END
 
+
 printf "=========================================================================\n"
 printf "Cai dat SSL... \n"
 printf "=========================================================================\n"
 
 #git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
-
-service nginx stop
 
 #cd /opt/letsencrypt
 #./letsencrypt-auto certonly --standalone
@@ -225,9 +224,9 @@ printf "Cai dat JICOFO... \n"
 printf "=========================================================================\n"
 
 cd ~/
-unzip jitsi_setup/jicofo-ubuntu-1.0-SNAPSHOT.zip
+unzip jitsi_setup/jicofo-linux-x64-1.1-SNAPSHOT.zip
 
-cd jicofo-ubuntu-1.0-SNAPSHOT
+cd jicofo-linux-x64-1.1-SNAPSHOT
 ./jicofo.sh --host=localhost --domain="$server_name" --secret="$jcofo_secret" --user_domain="auth.$server_name" --user_name=focus --user_password="$auth_secret"
 
 
