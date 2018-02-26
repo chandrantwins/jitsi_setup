@@ -90,7 +90,7 @@ printf "========================================================================
 
 apt-get install -y prosody
 
-cat > "/etc/prosody/conf.avail/$server_name" <<END
+cat > "/etc/prosody/conf.avail/$server_name.cfg.lua" <<END
 VirtualHost "$server_name"
     authentication = "anonymous"
     ssl = {
@@ -196,12 +196,12 @@ printf "========================================================================
 printf "Cai dat SSL... \n"
 printf "=========================================================================\n"
 
-git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+#git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 
 service nginx stop
 
-cd /opt/letsencrypt
-./letsencrypt-auto certonly --standalone
+#cd /opt/letsencrypt
+#./letsencrypt-auto certonly --standalone
 
 printf "=========================================================================\n"
 printf "Cai dat JVB... \n"
