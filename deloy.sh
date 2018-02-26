@@ -197,10 +197,10 @@ printf "========================================================================
 printf "Cai dat SSL... \n"
 printf "=========================================================================\n"
 
-#git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 
-#cd /opt/letsencrypt
-#./letsencrypt-auto certonly --standalone
+cd /opt/letsencrypt
+./letsencrypt-auto certonly --standalone
 
 printf "=========================================================================\n"
 printf "Cai dat JVB... \n"
