@@ -1,8 +1,8 @@
 # jitsi_setup
 
-sudo -i
+$ sudo -i
 
-git clone https://github.com/pekubu/jitsi_setup.git
+$ git clone https://github.com/pekubu/jitsi_setup.git
 
 $ cd jitsi_setup
 
