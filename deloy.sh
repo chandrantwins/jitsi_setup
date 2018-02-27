@@ -215,6 +215,31 @@ cat > "$home_dir/.sip-communicator/sip-communicator.properties" <<END
 org.jitsi.impl.neomedia.transform.srtp.SRTPCryptoContext.checkReplay=false
 END
 
+cat > "/etc/systemd/system/videobrigde.service" <<END
+[Unit]
+Description=Video Bridge
+After=network.target
+
+[Service]
+User=root
+Restart=always
+Type=simple
+ExecStart=/bin/bash /root/jitsi-videobridge-linux-x64-1031/jvb.sh --host=localhost --domain=$server_name --port=5347 --secret=$jvb_secret
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=videobridgelog
+
+[Install]
+WantedBy=multi-user.target
+END
+systemctl daemon-reload
+systemctl enable videobrigde.service
+
+cat > "/etc/rsyslog.d/10-videobrigdelog.conf" <<END
+if $programname == 'videobridgelog' then /var/log/jvb.log
+END
+systemctl restart rsyslog
+
 printf "=========================================================================\n"
 printf "Cai dat JICOFO... \n"
 printf "=========================================================================\n"
@@ -223,9 +248,41 @@ cd ~/
 unzip jitsi_setup/jicofo-linux-x64-1.1-SNAPSHOT.zip
 
 cd jicofo-linux-x64-1.1-SNAPSHOT
+
+cat > "/etc/systemd/system/jicofo.service" <<END
+[Unit]
+Description=Jicofo
+After=network.target
+
+[Service]
+User=root
+Restart=always
+Type=simple
+ExecStart=/bin/bash /root/jicofo-linux-x64-1.1-SNAPSHOT/jicofo.sh --host=localhost --domain=$server_name --secret=$jcofo_secret --user_domain=auth.$server_name --user_name=focus --user_password=$auth_secret
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=jicofolog
+
+[Install]
+WantedBy=multi-user.target
+END
+systemctl daemon-reload
+systemctl enable videobrigde.service
+
+cat > "/etc/rsyslog.d/10-jicofolog.conf" <<END
+if $programname == 'jicofolog' then /var/log/jicofo.log
+END
+systemctl restart rsyslog
+
+printf "=========================================================================\n"
+printf "Create auto start service... \n"
+printf "=========================================================================\n"
+
 cat > "/etc/rc.local" <<END
-/bin/bash /root/jitsi-videobridge-linux-x64-1031/jvb.sh --host=localhost --domain=$server_name --port=5347 --secret=$jvb_secret </dev/null >> /var/log/jvb.log 2>&1
-/bin/bash /root/jicofo-linux-x64-1.1-SNAPSHOT/jicofo.sh --host=localhost --domain=$server_name --secret=$jcofo_secret --user_domain=auth.$server_name --user_name=focus --user_password=$auth_secret </dev/null >> /var/log/jicofo.log 2>&1
+#!/bin/sh -e
+systemctl start videobrigde.service
+systemctl start jicofo.service
+exit 0
 END
 
 
