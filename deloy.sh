@@ -61,6 +61,13 @@ if [ "$server_name" = "" ]; then
 	exit
 fi
 
+printf "\nNhap vao domain webhook (dev.calling.fun/calling.fun): " 
+read webhook
+if [ "$webhook" = "" ]; then
+    echo "Nhap sai cmnr. Say googbye!!!"
+    exit
+fi
+
 printf "\nNhat mat khau server jvb (de trong de tao tu dong): " 
 read jvb_secret
 if [ "$jvb_secret" = "" ]; then
@@ -258,7 +265,7 @@ After=network.target
 User=root
 Restart=always
 Type=simple
-ExecStart=/bin/bash /root/jicofo-linux-x64-1.1-SNAPSHOT/jicofo.sh --host=localhost --domain=$server_name --secret=$jcofo_secret --user_domain=auth.$server_name --user_name=focus --user_password=$auth_secret
+ExecStart=/bin/bash /root/jicofo-linux-x64-1.1-SNAPSHOT/jicofo.sh --host=localhost --domain=$server_name --secret=$jcofo_secret --user_domain=auth.$server_name --user_name=focus --user_password=$auth_secret --webhook=https://$webhook/api/jitsi-webhook
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=jicofolog
