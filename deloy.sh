@@ -285,5 +285,11 @@ systemctl start jicofo.service
 exit 0
 END
 
+printf "=========================================================================\n"
+printf "CAI DAT THANH CONG. REBOOT SAU 3s... \n"
+printf "=========================================================================\n"
+
+sleep 3
+reboot
 
 
