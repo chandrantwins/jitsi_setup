@@ -11,7 +11,7 @@ if [ $(id -u) != "0" ]; then
 fi
 cd ~/
 apt-get update
-apt-get install bc
+apt-get install -y bc
 
 printf "=========================================================================\n"
 printf "Check cai cau hinh phat da \n"
@@ -46,6 +46,7 @@ printf "========================================================================
 home_dir=$( getent passwd "$USER" | cut -d: -f6 )
 apt-get install -y default-jre
 apt-get install -y default-jdk maven
+apt-get install -y unzip
 
 export LC_ALL="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
@@ -168,11 +169,10 @@ server {
 
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_prefer_server_ciphers on;
-    ssl_ciphers "EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA256:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA384:EDH+aRSA+AESGCM:EDH+aRSA+SHA256:EDH+aRSA:EECDH:!aNULL:!eNULL:!MEDIUM:!LOW:!3DES:!MD5:!EXP:$
-	
-	add_header 'Access-Control-Allow-Origin' '*';
+    ssl_ciphers "EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA256:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA384:EDH+aRSA+AESGCM:EDH+aRSA+SHA256:EDH+aRSA:EECDH:!aNULL:!eNULL:!MEDIUM:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!RC4:!SEED";
+    add_header 'Access-Control-Allow-Origin' '*';
     add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
- 	add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+    add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
     add_header Strict-Transport-Security "max-age=31536000";
 
     ssl_certificate /etc/letsencrypt/live/$server_name/fullchain.pem;
@@ -193,12 +193,12 @@ server {
     # BOSH
     location /http-bind {
         proxy_pass      http://localhost:5280/http-bind;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For \$remote_addr;
+        proxy_set_header Host \$http_host;
     }
 }
 END
-
+ln -s /etc/nginx/sites-available/jitsi-dev.calling.fun /etc/nginx/sites-enabled/jitsi-dev.calling.fun
 
 printf "=========================================================================\n"
 printf "Cai dat SSL... \n"
@@ -243,7 +243,7 @@ systemctl daemon-reload
 systemctl enable videobrigde.service
 
 cat > "/etc/rsyslog.d/10-videobrigdelog.conf" <<END
-if $programname == 'videobridgelog' then /var/log/jvb.log
+if \$programname == 'videobridgelog' then /var/log/jvb.log
 END
 systemctl restart rsyslog
 
@@ -253,8 +253,6 @@ printf "========================================================================
 
 cd ~/
 unzip jitsi_setup/jicofo-linux-x64-1.1-SNAPSHOT.zip
-
-cd jicofo-linux-x64-1.1-SNAPSHOT
 
 cat > "/etc/systemd/system/jicofo.service" <<END
 [Unit]
@@ -276,8 +274,8 @@ END
 systemctl daemon-reload
 systemctl enable videobrigde.service
 
-cat > "/etc/rsyslog.d/10-jicofolog.conf" <<END
-if $programname == 'jicofolog' then /var/log/jicofo.log
+cat > "/etc/rsyslog.d/12-jicofolog.conf" <<END
+if \$programname == 'jicofolog' then /var/log/jicofo.log
 END
 systemctl restart rsyslog
 
