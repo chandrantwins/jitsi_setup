@@ -198,7 +198,7 @@ server {
     }
 }
 END
-ln -s /etc/nginx/sites-available/jitsi-dev.calling.fun /etc/nginx/sites-enabled/jitsi-dev.calling.fun
+ln -s "/etc/nginx/sites-available/$server_name" "/etc/nginx/sites-enabled/$server_name"
 
 printf "=========================================================================\n"
 printf "Cai dat SSL... \n"
